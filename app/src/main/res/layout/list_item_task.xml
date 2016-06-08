@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/list_item_task_card_view"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/list_item_task_height"
+    android:elevation="3dp"
+    android:layout_marginLeft="@dimen/md_keylines"
+    android:layout_marginRight="@dimen/md_keylines"
+    android:layout_marginTop="@dimen/md_keylines"
+    android:layout_gravity="center"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="@color/colorPrimary">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/md_keylines">
+
+        <TextView
+            android:id="@+id/list_item_task_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            style="@style/TextAppearance.AppCompat.Title"
+            android:textColor="@color/dark_grey"
+            tools:text="My Task"
+            />
+
+
+        <ImageButton
+            android:id="@+id/list_item_task_button_done"
+            android:layout_width="@dimen/cards_button_width"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_done_24dp"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:tint="@color/button_grey"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"/>
+
+        <ImageButton
+            android:id="@+id/list_item_task_button_swipe"
+            android:layout_width="@dimen/cards_button_width"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_swap_horiz_24dp"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:tint="@color/button_grey"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
