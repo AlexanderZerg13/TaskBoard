@@ -1,5 +1,6 @@
 package com.example.pilipenko.taskboard.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -18,10 +19,22 @@ public class TaskListHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table " + TasksTable.NAME + "(" +
             "_id integer primary key autoincrement, " +
+            TasksTable.Cols.UUID + " string, " +
             TasksTable.Cols.TITLE + " string, " +
             TasksTable.Cols.TIME + " integer, " +
             TasksTable.Cols.SOLVED + " integer" +
             ")");
+
+        ContentValues values;
+        for (int i = 0; i < 5; i++) {
+            values = new ContentValues();
+            values.put(TasksTable.Cols.UUID, Integer.toString(i));
+            values.put(TasksTable.Cols.TITLE, "task #" + i);
+            values.put(TasksTable.Cols.TIME, i * 60);
+            values.put(TasksTable.Cols.SOLVED, 0);
+
+            db.insert(TasksTable.NAME, null, values);
+        }
     }
 
     @Override
