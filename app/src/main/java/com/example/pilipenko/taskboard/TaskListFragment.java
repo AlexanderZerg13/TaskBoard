@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -85,8 +84,9 @@ public class TaskListFragment extends Fragment {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.list_item_task_button_done:
-                    mAdapter.notifyItemRemoved(getLayoutPosition());
-                    mAdapter.notifyItemInserted(0);
+                    TaskLab.get(getActivity()).doneTask(mTask.getId());
+                    mAdapter.updateTasks();
+                    mAdapter.notifyDataSetChanged();
                     break;
                 case R.id.list_item_task_button_swipe:
                     mAdapter.notifyItemRemoved(getLayoutPosition());
@@ -126,7 +126,11 @@ public class TaskListFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return 3;
+            return mTasks.size() < 3? mTasks.size() : 3;
+        }
+
+        public void updateTasks() {
+            mTasks = TaskLab.get(getActivity()).getTasks();
         }
     }
 

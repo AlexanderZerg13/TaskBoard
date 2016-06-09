@@ -11,6 +11,7 @@ import com.example.pilipenko.taskboard.database.TaskListHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class TaskLab {
     private static TaskLab sTaskLab;
@@ -34,6 +35,26 @@ public class TaskLab {
     public List<Task> getTasks() {
         List<Task> tasks = new ArrayList<>();
 
+        String whereClause = TasksTable.Cols.SOLVED + " = ?";
+        String[] whereArgs = {"0"};
+        TaskCursorWrapper cursor = queryTask(whereClause, whereArgs);
+
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                tasks.add(cursor.getTask());
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+
+        return tasks;
+    }
+
+    public List<Task> getAllTasks() {
+        List<Task> tasks = new ArrayList<>();
+
         TaskCursorWrapper cursor = queryTask(null, null);
 
         try {
@@ -47,6 +68,18 @@ public class TaskLab {
         }
 
         return tasks;
+    }
+
+    public boolean doneTask(UUID uuid) {
+        String whereClause = TasksTable.Cols.UUID + " = ?";
+        String[] whereArgs = {uuid.toString()};
+        TaskCursorWrapper cursor = queryTask(whereClause, whereArgs);
+        cursor.moveToFirst();
+        Task task = cursor.getTask();
+        task.setSolved(true);
+        ContentValues contentValues = getContentValues(task);
+        int update = mDatabase.update(TasksTable.NAME, contentValues, whereClause, whereArgs);
+        return update == 1? true: false;
     }
 
     private TaskCursorWrapper queryTask(String whereClause, String[] whereArgs) {

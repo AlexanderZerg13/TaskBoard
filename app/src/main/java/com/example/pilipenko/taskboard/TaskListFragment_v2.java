@@ -42,7 +42,7 @@ public class TaskListFragment_v2 extends Fragment {
 
 
         TaskLab taskLab = TaskLab.get(getActivity());
-        ArrayList<Task> tasks = (ArrayList<Task>) taskLab.getTasks();
+        ArrayList<Task> tasks = (ArrayList<Task>) taskLab.getAllTasks();
         mNumberTask = tasks.size() > 3? 3 : tasks.size();
         for(int i = 0; i < mNumberTask; i++) {
             final int n = i;

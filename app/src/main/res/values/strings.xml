@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">TaskBoard</string>
+    <string name="new_task">Title</string>
 </resources>
