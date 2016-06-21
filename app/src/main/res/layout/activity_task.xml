@@ -8,67 +8,63 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsing_tool_bar_layout"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/activity_task_toolbar1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:elevation="0dp"
-            app:expandedTitleTextAppearance="@style/Widget.AppCompat.ActionBar.TabText"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:statusBarScrim="?attr/colorAccent">
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/activity_task_toolbar1"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:layout_collapseMode="none"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-            </android.support.v7.widget.Toolbar>
-
-        </android.support.design.widget.CollapsingToolbarLayout>
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:layout_collapseMode="none"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+        </android.support.v7.widget.Toolbar>
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/activity_task_toolbar2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            android:paddingBottom="@dimen/md_keylines"
+            android:paddingLeft="@dimen/md_keylines_big"
+            android:paddingRight="@dimen/md_keylines"
+            android:paddingTop="@dimen/md_keylines"
+            app:layout_scrollFlags="scroll|enterAlways">
 
-            <android.support.design.widget.TextInputLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="32dp"
-                android:paddingTop="16dp"
-                android:paddingBottom="56dp"
-                android:paddingRight="16dp">
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/activity_task_text_view_sentence"
+                    style="@style/TextAppearance.AppCompat.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/new_task_title"
+                    android:textColor="@android:color/white"/>
 
                 <EditText
                     android:id="@+id/activity_task_title"
+                    style="@style/TextAppearance.AppCompat.Large"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/activity_task_text_view_sentence"
                     android:hint="@string/new_task"/>
 
-            </android.support.design.widget.TextInputLayout>
+                <Button
+                    android:id="@+id/activity_task_button_add"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/activity_task_title"
+                    android:text="@string/new_task_add"/>
+
+            </RelativeLayout>
+
 
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
-
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/activity_task_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/md_keylines"
-        android:clickable="true"
-        android:src="@drawable/ic_done_24dp"
-        android:tint="@android:color/white"
-        app:layout_anchor="@id/activity_task_toolbar2"
-        app:layout_anchorGravity="bottom|right|end"/>
 
 </android.support.design.widget.CoordinatorLayout>
