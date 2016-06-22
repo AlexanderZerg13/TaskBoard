@@ -47,6 +47,12 @@ public class TaskListFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateUI();
+    }
+
     private void updateUI() {
         TaskLab taskLab = TaskLab.get(getActivity());
         List<Task> tasks = taskLab.getTasks();
@@ -87,8 +93,8 @@ public class TaskListFragment extends Fragment {
                     mAdapter.notifyDataSetChanged();
                     break;
                 case R.id.list_item_task_button_swipe:
-                    mAdapter.notifyItemRemoved(getLayoutPosition());
-                    mAdapter.notifyItemInserted(0);
+                    mAdapter.updateTasks();
+                    mAdapter.notifyDataSetChanged();
                     break;
             }
         }

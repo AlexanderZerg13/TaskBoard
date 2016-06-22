@@ -82,6 +82,12 @@ public class TaskLab {
         return update == 1? true: false;
     }
 
+    public long addTask(String title) {
+        Task task = new Task(title, 10, false);
+        ContentValues contentValues = getContentValues(task);
+        return mDatabase.insert(TasksTable.NAME, null, contentValues);
+    }
+
     private TaskCursorWrapper queryTask(String whereClause, String[] whereArgs) {
         Cursor cursor = mDatabase.query(
                 TasksTable.NAME,

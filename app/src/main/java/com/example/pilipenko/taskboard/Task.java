@@ -17,7 +17,7 @@ public class Task {
     }
 
     public Task(String title, int time, boolean solved) {
-        super();
+        this();
         mTitle = title;
         mTime = time;
         mSolved = solved;
