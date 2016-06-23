@@ -55,7 +55,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/activity_task_text_view_sentence"
-                        android:hint="@string/new_task"/>
+                        android:hint="@string/new_task"
+                        android:maxLines="2"/>
 
                     <Spinner
                         android:id="@+id/activity_task_spinner_time"

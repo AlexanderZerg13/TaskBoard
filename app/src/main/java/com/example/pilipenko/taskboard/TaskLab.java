@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.pilipenko.taskboard.database.TaskCursorWrapper;
 import com.example.pilipenko.taskboard.database.TaskListDbSchema.TasksTable;
@@ -82,8 +83,9 @@ public class TaskLab {
         return update == 1? true: false;
     }
 
-    public long addTask(String title) {
-        Task task = new Task(title, 10, false);
+    public long addTask(String title, int minutes) {
+        Log.d("TAG", "addTask: " + title + " " + minutes);
+        Task task = new Task(title, minutes, false);
         ContentValues contentValues = getContentValues(task);
         return mDatabase.insert(TasksTable.NAME, null, contentValues);
     }

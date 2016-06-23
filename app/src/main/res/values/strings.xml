@@ -4,12 +4,17 @@
     <string name="new_task_title">New task name</string>
     <string name="new_task_add">Add new task</string>
     <string name="time">Time</string>
+    <string name="select_time">Enter time:</string>
     <array name="time_items">
         <item>10 minutes</item>
         <item>15 minutes</item>
         <item>30 minutes</item>
         <item>45 minutes</item>
         <item>1 hour</item>
-        <item>Other...</item>
+    </array>
+    <string name="time_items_other">Other...</string>
+    <array name="time_type">
+        <item>minutes</item>
+        <item>hours</item>
     </array>
 </resources>
