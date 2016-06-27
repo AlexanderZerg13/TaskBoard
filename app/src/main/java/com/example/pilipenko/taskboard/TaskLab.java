@@ -6,7 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.example.pilipenko.taskboard.database.SpinnerCursorWrapper;
 import com.example.pilipenko.taskboard.database.TaskCursorWrapper;
+import com.example.pilipenko.taskboard.database.TaskListDbSchema.SpinnerTimePickerTable;
 import com.example.pilipenko.taskboard.database.TaskListDbSchema.TasksTable;
 import com.example.pilipenko.taskboard.database.TaskListHelper;
 
@@ -31,6 +33,55 @@ public class TaskLab {
         mContext = context.getApplicationContext();
         mDatabase = new TaskListHelper(mContext)
                 .getWritableDatabase();
+    }
+
+    public List<String> getSpinnerItems () {
+        List<String> items = new ArrayList<>();
+
+        for (Integer i: getSpinnerItemsValues()) {
+            items.add(SpinnerCursorWrapper.getItemText(i, mContext));
+        }
+
+        return items;
+    }
+
+    public List<Integer> getSpinnerItemsValues() {
+        List<Integer> values = new ArrayList<>();
+
+        SpinnerCursorWrapper cursor = querySpinner(null, null);
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                values.add(cursor.getItemValue());
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+
+        return values;
+    }
+
+    public void addSpinnerHistoryItem(int value) {
+        String whereClause = "_id = ?";
+        String[] whereArgs = {Integer.toString(TaskListHelper.getSpinnerItemsCount() + 1)};
+        SpinnerCursorWrapper cursor = querySpinner(whereClause, whereArgs);
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SpinnerTimePickerTable.Cols.MINUTES, value);
+        if (cursor.getCount() == 0) {
+            mDatabase.insert(SpinnerTimePickerTable.NAME, null, contentValues);
+        } else {
+            mDatabase.update(SpinnerTimePickerTable.NAME, contentValues, whereClause, whereArgs);
+        }
+    }
+
+    public int getSpinnerHistoryItem() {
+        List<Integer> list = getSpinnerItemsValues();
+        if (list.size() == TaskListHelper.getSpinnerItemsCount() + 1) {
+            return list.get(TaskListHelper.getSpinnerItemsCount());
+        } else {
+            return 0;
+        }
     }
 
     public List<Task> getTasks() {
@@ -112,5 +163,19 @@ public class TaskLab {
         values.put(TasksTable.Cols.SOLVED, task.isSolved() ? 1 : 0);
 
         return values;
+    }
+
+    private SpinnerCursorWrapper querySpinner(String whereClause, String[] whereArgs) {
+        Cursor cursor = mDatabase.query(
+                SpinnerTimePickerTable.NAME,
+                null,
+                whereClause,
+                whereArgs,
+                null,
+                null,
+                null
+        );
+
+        return new SpinnerCursorWrapper(cursor);
     }
 }

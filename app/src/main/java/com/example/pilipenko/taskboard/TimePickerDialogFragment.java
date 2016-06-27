@@ -14,102 +14,50 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TimePicker;
 
 public class TimePickerDialogFragment extends DialogFragment {
-    private String[] mTypes;
 
-    private EditText mEditText;
-    private Spinner mSpinner;
-    private ArrayAdapter mArrayAdapter;
+    private static final String KEY_MINUTES = "MINUTES";
 
+    private TimePicker mTimePicker;
+
+    public static TimePickerDialogFragment newInstance(int minutes) {
+
+        Bundle args = new Bundle();
+        args.putInt(KEY_MINUTES, minutes);
+
+        TimePickerDialogFragment fragment = new TimePickerDialogFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity())
                 .inflate(R.layout.fragment_time_picker, null);
-        mTypes = getResources().getStringArray(R.array.time_type);
 
-        mEditText = (EditText) view.findViewById(R.id.fragment_time_picker_edit_text_time);
-        mSpinner = (Spinner) view.findViewById(R.id.fragment_time_picker_spinner_type);
-        mArrayAdapter =
-                ArrayAdapter.createFromResource(getActivity(), R.array.time_type, android.R.layout.simple_spinner_item);
-
-        mArrayAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
-        mSpinner.setAdapter(mArrayAdapter);
-        mSpinner.setSelection(0);
-
-
-        initListener();
+        mTimePicker = (TimePicker) view.findViewById(R.id.fragment_time_picker_timer_picker);
+        mTimePicker.setIs24HourView(true);
+        int m = getArguments().getInt(KEY_MINUTES, 0);
+        mTimePicker.setCurrentHour(m / 60);
+        mTimePicker.setCurrentMinute(m % 60);
 
         return new AlertDialog.Builder(getActivity())
                 .setView(view)
-                .setTitle(R.string.select_time)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (TextUtils.isEmpty(mEditText.getText())) {
-                            return;
-                        }
-                        int time = Integer.parseInt(mEditText.getText().toString());
-                        int type = mSpinner.getSelectedItemPosition() == 0?
-                                TimePickerDialogListener.KEY_TYPE_MINUTE: TimePickerDialogListener.KEY_TYPE_HOUR;
+                        int minutes = mTimePicker.getCurrentHour() * 60 + mTimePicker.getCurrentMinute();
                         TimePickerDialogListener activity = (TimePickerDialogListener) getActivity();
-                        activity.onFinishEnterTime(time, type);
+                        activity.onFinishEnterTime(minutes);
                     }
                 })
                 .create();
     }
 
-    private void initListener() {
-        mEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                checkMaxHour(s);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 1) {
-                    checkMaxHour(mEditText.getText());
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-    }
-
-    private void checkMaxHour(CharSequence s) {
-        if (mTypes[1].equals(mArrayAdapter.getItem(mSpinner.getSelectedItemPosition()))) {
-            if (TextUtils.isEmpty(s)) {
-                return;
-            }
-            int i = Integer.parseInt(s.toString());
-            if (i > 24) {
-                mEditText.setText("24");
-                mEditText.setSelection(2);
-            }
-        }
-    }
 
     public interface TimePickerDialogListener {
-        int KEY_TYPE_MINUTE = 0;
-        int KEY_TYPE_HOUR = 1;
-
-        void onFinishEnterTime(int time, int type);
+        void onFinishEnterTime(int minutes);
     }
 }

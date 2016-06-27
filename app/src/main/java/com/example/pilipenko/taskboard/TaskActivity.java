@@ -1,19 +1,13 @@
 package com.example.pilipenko.taskboard;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,7 +29,6 @@ public class TaskActivity extends AppCompatActivity implements TimePickerDialogF
     private ArrayAdapter<CharSequence> mArrayAdapter;
 
     private int oldPosition;
-    private int extraTime;
 
     public static Intent newIntent(Context packageContext) {
         Intent intent = new Intent(packageContext, TaskActivity.class);
@@ -46,6 +39,7 @@ public class TaskActivity extends AppCompatActivity implements TimePickerDialogF
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
+        final TaskLab taskLab = TaskLab.get(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_task_toolbar1);
         setSupportActionBar(toolbar);
@@ -56,14 +50,14 @@ public class TaskActivity extends AppCompatActivity implements TimePickerDialogF
         mEditTextTitle = (EditText) findViewById(R.id.activity_task_title);
         mSpinnerTime = (Spinner) findViewById(R.id.activity_task_spinner_time);
 
-        mArrayAdapter = new ArrayAdapter<CharSequence>(this, R.layout.simple_spinner_item);
-                //ArrayAdapter.createFromResource(this, R.array.time_items, R.layout.simple_spinner_item);
-        mArrayAdapter.addAll(getResources().getStringArray(R.array.time_items));
+        mArrayAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item);
+        mArrayAdapter.addAll(taskLab.getSpinnerItems());
         mArrayAdapter.add(getString(R.string.time_items_other));
-        mArrayAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
+        mArrayAdapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
 
         mSpinnerTime.setAdapter(mArrayAdapter);
         mSpinnerTime.setSelection(0);
+        mSpinnerTime.getBackground().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
         mSpinnerTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -74,7 +68,8 @@ public class TaskActivity extends AppCompatActivity implements TimePickerDialogF
                     if (manager.findFragmentByTag(DIALOG_TIME) != null) {
                         return;
                     }
-                    TimePickerDialogFragment dialogFragment = new TimePickerDialogFragment();
+                    int value = taskLab.getSpinnerHistoryItem();
+                    TimePickerDialogFragment dialogFragment = TimePickerDialogFragment.newInstance(value);
                     dialogFragment.show(manager, DIALOG_TIME);
                 } else {
                     oldPosition = position;
@@ -114,53 +109,26 @@ public class TaskActivity extends AppCompatActivity implements TimePickerDialogF
     }
 
     @Override
-    public void onFinishEnterTime(int time, int type) {
+    public void onFinishEnterTime(int minutes) {
+        TaskLab taskLab = TaskLab.get(this);
+        taskLab.addSpinnerHistoryItem(minutes);
+
         mArrayAdapter.clear();
-        mArrayAdapter.addAll(getResources().getStringArray(R.array.time_items));
-
-        StringBuilder stringBuilder = new StringBuilder();
-        if (type == TimePickerDialogFragment.TimePickerDialogListener.KEY_TYPE_HOUR) {
-            stringBuilder.append(time);
-            stringBuilder.append(" hours");
-            extraTime = time * 60;
-        } else if (type == TimePickerDialogFragment.TimePickerDialogListener.KEY_TYPE_MINUTE) {
-            if (time < 60) {
-                stringBuilder.append(time);
-                stringBuilder.append(" minutes");
-            } else {
-                if (time % 60 == 0) {
-                    stringBuilder.append(time / 60);
-                    stringBuilder.append(" hours");
-                } else {
-                    stringBuilder.append(time / 60);
-                    stringBuilder.append(" h. ");
-                    stringBuilder.append(time % 60);
-                    stringBuilder.append(" m.");
-                }
-            }
-            extraTime = time;
-        }
-        mArrayAdapter.add(stringBuilder.toString());
-
+        mArrayAdapter.addAll(taskLab.getSpinnerItems());
         mArrayAdapter.add(getString(R.string.time_items_other));
-        mArrayAdapter.notifyDataSetChanged();
 
+        mArrayAdapter.notifyDataSetChanged();
 
         mSpinnerTime.setSelection(mArrayAdapter.getCount() - 2);
     }
 
     private void addTask() {
-        int time;
-        int[] array = getResources().getIntArray(R.array.array_minutes);
+        TaskLab taskLab = TaskLab.get(this);
         int position = mSpinnerTime.getSelectedItemPosition();
-        if (position == array.length) {
-            time = extraTime;
-        } else {
-            time = array[position];
-        }
+        int time = taskLab.getSpinnerItemsValues().get(position);
 
         String title = mEditTextTitle.getText().toString();
-        TaskLab.get(TaskActivity.this).addTask(title, time);
+        taskLab.addTask(title, time);
         setResult(RESULT_OK);
         finish();
     }

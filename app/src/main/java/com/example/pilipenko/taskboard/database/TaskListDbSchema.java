@@ -11,4 +11,12 @@ public class TaskListDbSchema {
             public static final String SOLVED = "solved";
         }
     }
+
+    public static final class SpinnerTimePickerTable {
+        public static final String NAME = "spinner";
+
+        public static final class Cols {
+            public static final String MINUTES = "minute";
+        }
+    }
 }

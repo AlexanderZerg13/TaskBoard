@@ -12,9 +12,21 @@
         <item>45 minutes</item>
         <item>1 hour</item>
     </array>
-    <string name="time_items_other">Other...</string>
+
     <array name="time_type">
         <item>minutes</item>
         <item>hours</item>
     </array>
+
+    <plurals name="minute_plurals">
+        <item quantity="one">%d minute</item>
+        <item quantity="other">%d minutes</item>
+    </plurals>
+    <plurals name="hour_plurals">
+        <item quantity="one">%d hour</item>
+        <item quantity="other">%d hours</item>
+    </plurals>
+    <string name="hour_and_minute">%1$d h. %2$d m.</string>
+    <string name="time_items_other">Other…</string>
+
 </resources>

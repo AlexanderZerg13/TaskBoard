@@ -68,6 +68,7 @@
                         android:layout_marginRight="@dimen/md_keylines_double"
                         android:layout_toLeftOf="@+id/activity_task_button_add"
                         android:drawSelectorOnTop="true"
+                        android:theme="@style/Theme.AppCompat.Light"
                         android:textColor="@android:color/white"/>
 
                     <Button
@@ -77,6 +78,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_below="@id/activity_task_title"
+                        android:stateListAnimator="@null"
                         android:text="@string/new_task_add"/>
 
                 </RelativeLayout>
